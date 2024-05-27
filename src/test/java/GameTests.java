@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GameTests2 {
+public class GameTests {
 
     @Test
     public void TicTacToeGameEvaluatePositionPlayingAfterMoveTest() {
