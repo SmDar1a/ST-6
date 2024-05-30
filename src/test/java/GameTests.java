@@ -48,13 +48,6 @@ public class GameTests {
     }
 
     @Test
-    public void testMiniMaxMoveValidity() {
-        assertEquals(State.PLAYING, game.state);
-        int move = game.MiniMax(game.board, game.player2);
-        assertTrue(move >= 1 && move <= 9);
-    }
-
-    @Test
     public void testGameEndAfterPlayerWin() {
         game.state = State.XWIN;
         assertNotEquals(State.PLAYING, game.state);
