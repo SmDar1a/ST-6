@@ -16,7 +16,7 @@ public class GameTests {
     private static Game game;
 
     @BeforeAll
-    public void setUp() {
+    public static void setUp() {
         game = new Game();
     }
 
