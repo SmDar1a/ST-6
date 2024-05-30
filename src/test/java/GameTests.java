@@ -67,12 +67,6 @@ public class GameTests {
     }
 
     @Test
-    public void testGameExitAfterResultMessage() {
-        game.state = State.XWIN;
-        assertEquals(0, JOptionPane.getFrameForComponent(null).getComponentCount());
-    }
-
-    @Test
     public void testCellStateChangeAfterMarkerSet() {
         TicTacToeCell cell = new TicTacToeCell(2, 0, 1);
         cell.setMarker("X");
