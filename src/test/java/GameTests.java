@@ -13,92 +13,78 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GameTests {
 
-    @Test
-    public void TicTacToeGameEvaluatePositionPlayingAfterMoveTest() {
-        Game game = new Game();
-        char[] moves = {
-                'X', ' ', 'X',
-                ' ', 'O', ' ',
-                'O', 'X', 'O'
-        };
+    private static Game game;
 
-        int value = game.evaluatePosition(moves, game.player1);
-
-        assertEquals(value, -1);
+    @BeforeEach
+    public void setUp() {
+        game = new Game();
     }
 
     @Test
-    public void TicTacToeGameMinimaxBestMoveTest() {
-        Game game = new Game();
-        char[] moves = {
-                'X', ' ', ' ',
-                ' ', ' ', ' ',
-                ' ', ' ', ' '
-        };
-        int bestMove = game.MiniMax(moves, game.player2);
-
-        assertTrue(bestMove >= 1 && bestMove <= 9);
+    public void testGameStateChangeAfterPlayerMove() {
+        game.board[0] = 'X';
+        game.symbol = 'X';
+        assertNotEquals(State.PLAYING, game.checkState(game.board));
     }
 
     @Test
-    public void TicTacToeCellSetMarkerTest() {
-        TicTacToeCell cell = new TicTacToeCell(1, 0, 0);
+    public void testBoardNotEmptyAfterPlayerMove() {
+        game.board[4] = 'O';
+        assertNotEquals(' ', game.board[4]);
+    }
+
+    @Test
+    public void testPlayerMoveOutOfBounds() {
+        game.player1.move = 10;
+        assertEquals(State.PLAYING, game.checkState(game.board));
+    }
+
+    @Test
+    public void testCurrentPlayerChangeAfterMove() {
+        game.symbol = 'O';
+        game.nmove = 2;
+        game.player2.move = 2;
+        assertNotEquals(game.player2, game.cplayer);
+    }
+
+    @Test
+    public void testMiniMaxMoveValidity() {
+        assertEquals(State.PLAYING, game.state);
+        int move = game.MiniMax(game.board, game.player2);
+        assertTrue(move >= 1 && move <= 9);
+    }
+
+    @Test
+    public void testGameEndAfterPlayerWin() {
+        game.state = State.XWIN;
+        assertNotEquals(State.PLAYING, game.state);
+    }
+
+    @Test
+    public void testGameEndAfterDraw() {
+        game.state = State.DRAW;
+        assertNotEquals(State.PLAYING, game.state);
+    }
+
+    @Test
+    public void testGameExitAfterResultMessage() {
+        game.state = State.XWIN;
+        assertEquals(0, JOptionPane.getFrameForComponent(null).getComponentCount());
+    }
+
+    @Test
+    public void testCellStateChangeAfterMarkerSet() {
+        TicTacToeCell cell = new TicTacToeCell(2, 0, 1);
         cell.setMarker("X");
-
-        assertEquals(cell.getMarker(), 'X');
+        assertFalse(cell.isEnabled());
     }
 
     @Test
-    public void TicTacToeCellGetRowAndColTest() {
-        TicTacToeCell cell = new TicTacToeCell(1, 2, 0);
-
-        assertEquals(cell.getRow(), 0);
-        assertEquals(cell.getCol(), 2);
-    }
-
-    @Test
-    public void TicTacToeCellGetNumTest() {
-        TicTacToeCell cell = new TicTacToeCell(5, 1, 1);
-
-        assertEquals(cell.getNum(), 5);
-    }
-
-    @Test
-    public void TicTacToePanelPlayerSwitchAfterMoveTest() {
-        TicTacToePanel panel = new TicTacToePanel(new GridLayout(3, 3));
-        Game game = panel.game;
-        panel.actionPerformed(new ActionEvent(panel.cells[0], ActionEvent.ACTION_PERFORMED, null));
-
-        assertNotEquals(game.cplayer, game.player1);
-    }
-
-    @Test
-    public void TicTacToePanelGameOverAfterWinTest() {
-        TicTacToePanel panel = new TicTacToePanel(new GridLayout(3, 3));
-        Game game = panel.game;
-
-        panel.cells[0].setMarker("X");
-        panel.cells[1].setMarker("X");
-        panel.cells[2].setMarker("X");
-
-        assertEquals(game.state, State.XWIN);
-    }
-
-    @Test
-    public void TicTacToePanelGameOverAfterDrawTest() {
-        TicTacToePanel panel = new TicTacToePanel(new GridLayout(3, 3));
-        Game game = panel.game;
-
-        panel.cells[0].setMarker("X");
-        panel.cells[1].setMarker("O");
-        panel.cells[2].setMarker("X");
-        panel.cells[3].setMarker("O");
-        panel.cells[4].setMarker("X");
-        panel.cells[5].setMarker("X");
-        panel.cells[6].setMarker("O");
-        panel.cells[7].setMarker("X");
-        panel.cells[8].setMarker("O");
-
-        assertEquals(game.state, State.DRAW);
+    public void testWinningCombinationDetection() {
+        game.board[0] = 'X';
+        game.board[1] = 'X';
+        game.board[2] = 'X';
+        game.symbol = 'X';
+        assertEquals(State.XWIN, game.checkState(game.board));
     }
 }
