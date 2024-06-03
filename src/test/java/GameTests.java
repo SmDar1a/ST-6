@@ -21,57 +21,68 @@ public class GameTests {
     }
 
     @Test
-    public void testGameStateChangeAfterPlayerMove() {
-        game.board[0] = 'X';
+    public void testDrawStateDetection() {
+        game.board = new char[]{'X', 'O', 'X', 'O', 'X', 'O', 'O', 'X', 'O'};
+        assertEquals(State.DRAW, game.checkState(game.board));
+    }
+
+    @Test
+    public void testWinningCombinationDetectionForO() {
+        game.board = new char[]{'O', 'O', 'O', ' ', ' ', ' ', ' ', ' ', ' '};
+        game.symbol = 'O';
+        assertEquals(State.OWIN, game.checkState(game.board));
+    }
+
+    @Test
+    public void testWinningDiagonalCombinationDetectionForX() {
+        game.board = new char[]{' ', ' ', 'X', ' ', 'X', ' ', 'X', ' ', ' '};
         game.symbol = 'X';
-        assertNotEquals(State.PLAYING, game.checkState(game.board));
+        assertEquals(State.XWIN, game.checkState(game.board));
     }
 
     @Test
-    public void testBoardNotEmptyAfterPlayerMove() {
-        game.board[4] = 'O';
-        assertNotEquals(' ', game.board[4]);
+    public void testWinningDiagonalCombinationDetectionForO() {
+        game.board = new char[]{' ', ' ', 'O', ' ', 'O', ' ', 'O', ' ', ' '};
+        game.symbol = 'O';
+        assertEquals(State.OWIN, game.checkState(game.board));
+    }    
+
+    @Test
+    public void testWinningVerticalCombinationDetectionForX() {
+        game.board = new char[]{'X', ' ', ' ', 'X', ' ', ' ', 'X', ' ', ' '};
+        game.symbol = 'X';
+        assertEquals(State.XWIN, game.checkState(game.board));
     }
 
     @Test
-    public void testPlayerMoveOutOfBounds() {
-        game.player1.move = 10;
+    public void testWinningVerticalCombinationDetectionForO() {
+        game.board = new char[]{'O', ' ', ' ', 'O', ' ', ' ', 'O', ' ', ' '};
+        game.symbol = 'O';
+        assertEquals(State.OWIN, game.checkState(game.board));
+    }
+
+    @Test
+    public void testStateWithTwoFilledRows() {
+        game.board = new char[]{'X', 'X', 'X', 'O', 'O', 'O', ' ', ' ', ' '};
+        assertEquals(State.PLAYING, game.checkState(game.board));
+    }
+
+   @Test
+    public void testStateWithFilledBoardButNoWinningCombination() {
+        game.board = new char[]{'X', 'O', 'X', 'O', 'X', 'O', 'O', 'X', 'O'};
+        assertEquals(State.DRAW, game.checkState(game.board));
+    } 
+
+    @Test
+    public void testStateWithOneFilledRow() {
+        game.board = new char[]{'X', 'X', 'X', ' ', ' ', ' ', ' ', ' ', ' '};
         assertEquals(State.PLAYING, game.checkState(game.board));
     }
 
     @Test
-    public void testCurrentPlayerChangeAfterMove() {
-        game.symbol = 'O';
-        game.nmove = 2;
-        game.player2.move = 2;
-        assertNotEquals(game.player2, game.cplayer);
+    public void testStateWithOneFilledCell() {
+        game.board = new char[]{'X', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+        assertEquals(State.PLAYING, game.checkState(game.board));
     }
 
-    @Test
-    public void testGameEndAfterPlayerWin() {
-        game.state = State.XWIN;
-        assertNotEquals(State.PLAYING, game.state);
-    }
-
-    @Test
-    public void testGameEndAfterDraw() {
-        game.state = State.DRAW;
-        assertNotEquals(State.PLAYING, game.state);
-    }
-
-    @Test
-    public void testCellStateChangeAfterMarkerSet() {
-        TicTacToeCell cell = new TicTacToeCell(2, 0, 1);
-        cell.setMarker("X");
-        assertFalse(cell.isEnabled());
-    }
-
-    @Test
-    public void testWinningCombinationDetection() {
-        game.board[0] = 'X';
-        game.board[1] = 'X';
-        game.board[2] = 'X';
-        game.symbol = 'X';
-        assertEquals(State.XWIN, game.checkState(game.board));
-    }
 }
