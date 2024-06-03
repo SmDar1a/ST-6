@@ -64,7 +64,7 @@ public class GameTests {
     @Test
     public void testStateWithTwoFilledRows() {
         game.board = new char[]{'X', 'X', 'X', 'O', 'O', 'O', ' ', ' ', ' '};
-        assertEquals(State.PLAYING, game.checkState(game.board));
+        assertEquals(State.XWIN, game.checkState(game.board));
     }
 
    @Test
@@ -76,7 +76,7 @@ public class GameTests {
     @Test
     public void testStateWithOneFilledRow() {
         game.board = new char[]{'X', 'X', 'X', ' ', ' ', ' ', ' ', ' ', ' '};
-        assertEquals(State.PLAYING, game.checkState(game.board));
+        assertEquals(State.XWIN, game.checkState(game.board));
     }
 
     @Test
